@@ -42,7 +42,7 @@ public class AndroidPublisherHelper {
 
     private static final Log log = LogFactory.getLog(AndroidPublisherHelper.class);
 
-    private static final String APPLICATION_NAME = "gradle-play-publisher"
+    private static final String APPLICATION_NAME = "AggregoPublisher"
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
 

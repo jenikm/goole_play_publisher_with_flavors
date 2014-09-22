@@ -33,7 +33,7 @@ class PlayPublisherPluginTest {
         Project project = evaluatableProject()
 
         project.android.productFlavors {
-            free
+            free { applicationId( "x.y.z") }
             paid
         }
 

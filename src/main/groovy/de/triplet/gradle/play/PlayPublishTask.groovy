@@ -22,10 +22,11 @@ class PlayPublishTask extends DefaultTask {
     @Input
     File manifestFile
 
+    @Input
+    String packageId
+
     @TaskAction
     def publish() {
-
-        def applicationId = new DefaultManifestParser().getPackage(manifestFile)
 
         AndroidPublisher service = AndroidPublisherHelper.init(extension.serviceAccountEmail, extension.pk12File)
 
@@ -33,7 +34,7 @@ class PlayPublishTask extends DefaultTask {
 
         // Create a new edit to make changes to your listing.
         AndroidPublisher.Edits.Insert editRequest = edits.insert(
-                applicationId,
+                packageId,
                 null /** no content yet */);
         AppEdit edit = editRequest.execute();
 
@@ -45,18 +46,19 @@ class PlayPublishTask extends DefaultTask {
 
         AndroidPublisher.Edits.Apks.Upload uploadRequest = edits
                 .apks()
-                .upload(applicationId, editId, apkFile);
+                .upload(packageId, editId, apkFile);
 
         Apk apk = uploadRequest.execute();
 
         List<Integer> apkVersionCodes = new ArrayList<>();
         apkVersionCodes.add(apk.getVersionCode());
+        System.out.println("" + packageId + " " + extension.track + " " + apkVersionCodes)
         AndroidPublisher.Edits.Tracks.Update updateTrackRequest = edits
                 .tracks()
-                .update(applicationId, editId, extension.track, new Track().setVersionCodes(apkVersionCodes));
+                .update(packageId, editId, extension.track, new Track().setVersionCodes(apkVersionCodes));
         updateTrackRequest.execute();
 
-        AndroidPublisher.Edits.Commit commitRequest = edits.commit(applicationId, editId);
+        AndroidPublisher.Edits.Commit commitRequest = edits.commit(packageId, editId);
         commitRequest.execute();
     }
 

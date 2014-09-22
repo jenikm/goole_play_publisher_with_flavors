@@ -47,6 +47,7 @@ class PlayPublisherPlugin implements Plugin<Project> {
                 publishTask.extension = extension
                 publishTask.inputFile = zipalignTask.outputFile
                 publishTask.manifestFile = manifestTask.manifestOutputFile
+                publishTask.packageId = variant.getMergedFlavor().applicationId
 
                 publishTask.dependsOn project.tasks."assemble$projectFlavorName$buildTypeName"
             } catch (MissingPropertyException e) {
